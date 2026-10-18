@@ -7,8 +7,8 @@ info:
     Records live in process memory and disappear on exit. Example credentials
     shipped with the repository are public fixtures.
   license:
-    name: License pending maintainer approval
-    url: https://opensource.org/licenses
+    name: MIT
+    url: https://opensource.org/licenses/MIT
 servers:
   - url: http://127.0.0.1:8080
     description: Loopback demo

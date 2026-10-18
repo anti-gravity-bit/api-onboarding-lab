@@ -37,12 +37,12 @@ The service is a local demo. It is not a production deployment, and this plan do
 - The webhook receiver does not look up the order. Signature, freshness, schema, and dedupe are the feature.
 - Default listen address on the host is `127.0.0.1:8080`. The container sets `ADDR=:8080` and does not publish a host port by itself. Compose, if added, publishes only on `127.0.0.1`.
 - Example credentials in `.env.example` are public fixtures. They are long enough to pass startup checks and are not secret.
-- License is undecided. Until a `LICENSE` file exists, no license is granted.
+- License is MIT, chosen by the maintainer on 2026-10-19. The file is `LICENSE`.
 - Module path, pending account confirmation: `github.com/anti-gravity-bit/api-onboarding-lab`.
 
-## Recommended license
+## License
 
-MIT. It is short, familiar to client reviewers, and matches a small demo they may copy. Apache-2.0 is the alternative if a patent grant is wanted. Neither file will be added until you choose.
+The maintainer chose MIT on 2026-10-19. `LICENSE` is the grant.
 
 ## Work sequence
 
@@ -56,8 +56,7 @@ MIT. It is short, familiar to client reviewers, and matches a small demo they ma
 
 ## Blockers
 
-- License approval.
-- Confirmation of the GitHub account and permission to create the public repository.
+- GitHub account `anti-gravity-bit` was confirmed. Creating or pushing the repository was not approved.
 - `gh` is missing, so repository creation from the CLI needs either an installed `gh` auth flow, the GitHub website, or another approved API. No personal access token will be requested in a prompt.
 - Pages and the live docs URL do not exist yet. The README must not link to them or show a CI badge until those exist.
 - govulncheck, spectral, and a dedicated secret scanner are not installed yet.

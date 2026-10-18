@@ -54,5 +54,5 @@ AGY runs only after the Go tests for the contract pass. It may not change route 
 
 - The Go intro book, employer trees, and anything under `workspace/fiverros`, `workspace/go/anhad`, or `workspace/backups`.
 - `git push`, GitHub repository creation, Pages, and public deployment.
-- A `LICENSE` file until the maintainer chooses one.
+- Replacing the approved MIT `LICENSE`.
 - Manus, and any commercial deliverable path whose license is not already cleared.

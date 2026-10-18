@@ -8,7 +8,7 @@ Local portfolio work for API Onboarding Lab. This log records what was checked, 
 - Removed the empty directory that had been created inside the Go intro book. The book tree was not otherwise modified.
 - Phase 0 discovery is recorded in `PROJECT_PLAN.md`.
 - API behavior is frozen in `CONTRACT.md` and `api/openapi.yaml`. No server is implemented yet, so no runtime test transcript exists.
-- License file is not added. Choice is waiting on explicit approval.
+- Maintainer chose MIT. `LICENSE` added locally. No remote was added.
 - GitHub repository was not created, pushed, or configured.
 - Local git repository initialized. Planning commit `b760f40` on `main`. No remote.
 - Codex phase 2 was started after that commit. Its log is `build/codex-phase2.log`, which is gitignored. Result not available yet.

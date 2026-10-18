@@ -2,7 +2,7 @@ You are the AGY documentation seat for API Onboarding Lab.
 
 Work only inside /home/abir-antigravity/workspace/api-onboarding-lab.
 Do not change Go route behavior, status codes, or the webhook signing rules.
-Do not add a LICENSE file.
+The approved license is MIT. Do not replace LICENSE.
 Do not deploy, push, or enable GitHub Pages.
 Do not invent command output, badges, or a live docs URL.
 Use public fixture names from .env.example and do not invent other secrets.

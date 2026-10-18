@@ -14,7 +14,7 @@ Owners: Grok (contract and review), Codex (Go and CI), AGY (docs and QA). Status
 | T7 | pending | Grok | Audit the docs against `CONTRACT.md` and the test transcript |
 | T8 | pending | Codex | `gofmt`, `go vet`, coverage, staticcheck, golangci-lint, govulncheck, OpenAPI lint |
 | T9 | pending | Codex | GitHub Actions with pinned SHAs and minimal permissions. Do not enable the workflow on a remote until push is approved |
-| T10 | blocked | Grok | LICENSE file after an explicit choice |
+| T10 | done | Grok | MIT license added after explicit approval. Publication remains blocked |
 | T11 | blocked | Grok | Create the GitHub repo, push, open the PR, and confirm remote CI |
 | T12 | blocked | Grok | Pages only after approval. Record the real URL and commit SHA |
 | T13 | pending | Grok | `CASE_STUDY.md` and the polished README, using executed commands only |
