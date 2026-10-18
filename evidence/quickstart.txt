@@ -1,0 +1,16 @@
+$ go version
+go version go1.27.2 linux/amd64
+$ curl --silent --show-error http://127.0.0.1:8080/healthz
+{"status":"ok"}
+
+$ sh examples/curl/create-order.sh
+{"id":"ord_8c08515ea8c68bce","sku":"DEMO-WIDGET","quantity":2,"customer_ref":"cust_demo_1001","status":"accepted","created_at":"2026-10-18T22:50:56.493067254Z"}
+
+$ sh examples/curl/send-webhook.sh
+{"status":"accepted","duplicate":false,"event_id":"evt_curl_demo_1001"}
+
+$ sh examples/curl/send-webhook.sh
+{"status":"duplicate","duplicate":true,"event_id":"evt_curl_demo_1001"}
+
+$ go run ./examples/go-client
+{"order":{"id":"ord_abbab1c4d21f1b32","sku":"DEMO-WIDGET","quantity":2,"customer_ref":"cust_demo_1001","status":"accepted","created_at":"2026-10-18T22:50:56.937924229Z"},"webhook":{"status":"accepted","duplicate":false,"event_id":"evt_go_client_1792363856938266171"}}

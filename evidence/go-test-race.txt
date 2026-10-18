@@ -1,0 +1,8 @@
+$ go test -count=1 -race ./...
+ok  	github.com/anti-gravity-bit/api-onboarding-lab/cmd/labd	1.057s
+?   	github.com/anti-gravity-bit/api-onboarding-lab/examples/curl/signature	[no test files]
+?   	github.com/anti-gravity-bit/api-onboarding-lab/examples/go-client	[no test files]
+ok  	github.com/anti-gravity-bit/api-onboarding-lab/internal/config	1.012s
+ok  	github.com/anti-gravity-bit/api-onboarding-lab/internal/httpapi	1.023s
+?   	github.com/anti-gravity-bit/api-onboarding-lab/internal/store	[no test files]
+ok  	github.com/anti-gravity-bit/api-onboarding-lab/webhooksig	1.009s

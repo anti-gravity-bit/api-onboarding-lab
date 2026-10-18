@@ -1,0 +1,4 @@
+$ staticcheck -version
+staticcheck 2026.2.2 (0.8.2)
+$ staticcheck ./...
+staticcheck_exit:0
