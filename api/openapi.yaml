@@ -1,0 +1,348 @@
+openapi: 3.0.3
+info:
+  title: API Onboarding Lab
+  version: 0.1.0
+  description: |
+    Synthetic local demo for order intake and signed webhook verification.
+    Records live in process memory and disappear on exit. Example credentials
+    shipped with the repository are public fixtures.
+  license:
+    name: License pending maintainer approval
+    url: https://opensource.org/licenses
+servers:
+  - url: http://127.0.0.1:8080
+    description: Loopback demo
+tags:
+  - name: Meta
+  - name: Orders
+  - name: Webhooks
+paths:
+  /healthz:
+    get:
+      tags: [Meta]
+      operationId: getHealth
+      summary: Process is answering HTTP
+      responses:
+        "200":
+          description: Process is answering. This is not a dependency check.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Health"
+              example:
+                status: ok
+  /v1/orders:
+    post:
+      tags: [Orders]
+      operationId: createOrder
+      summary: Accept a synthetic order
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateOrderRequest"
+            example:
+              sku: DEMO-WIDGET
+              quantity: 2
+              customer_ref: cust_demo_1001
+      responses:
+        "201":
+          description: Order stored in process memory.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+              example:
+                id: ord_0123456789abcdef
+                sku: DEMO-WIDGET
+                quantity: 2
+                customer_ref: cust_demo_1001
+                status: accepted
+                created_at: "2026-10-19T00:00:00Z"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedMedia"
+  /v1/orders/{id}:
+    get:
+      tags: [Orders]
+      operationId: getOrder
+      summary: Read one synthetic order
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^ord_[0-9a-f]{16}$"
+          example: ord_0123456789abcdef
+      responses:
+        "200":
+          description: The stored order.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Order"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /v1/webhooks/order:
+    post:
+      tags: [Webhooks]
+      operationId: receiveOrderWebhook
+      summary: Verify and dedupe a signed order event
+      description: |
+        Authentication is the Lab-Signature header, not the bearer token.
+        See CONTRACT.md for the exact signed-byte layout.
+      parameters:
+        - $ref: "#/components/parameters/RequestId"
+        - name: Lab-Signature
+          in: header
+          required: true
+          schema:
+            type: string
+          example: "t=1710000000,v1=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WebhookEvent"
+            example:
+              id: evt_demo_1001
+              type: order.accepted
+              order_id: ord_0123456789abcdef
+              occurred_at: "2026-10-19T00:00:00Z"
+      responses:
+        "202":
+          description: First time this event id was accepted.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookResult"
+              example:
+                status: accepted
+                duplicate: false
+                event_id: evt_demo_1001
+        "200":
+          description: This event id was already accepted. The body was not applied again.
+          headers:
+            X-Request-Id:
+              $ref: "#/components/headers/RequestId"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WebhookResult"
+              example:
+                status: duplicate
+                duplicate: true
+                event_id: evt_demo_1001
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "413":
+          $ref: "#/components/responses/PayloadTooLarge"
+        "415":
+          $ref: "#/components/responses/UnsupportedMedia"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    RequestId:
+      name: X-Request-Id
+      in: header
+      required: false
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 64
+        pattern: "^[A-Za-z0-9._-]+$"
+  headers:
+    RequestId:
+      schema:
+        type: string
+      description: Echo of a safe inbound X-Request-Id, or a generated req_ id.
+  responses:
+    BadRequest:
+      description: Malformed JSON or schema validation failed.
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    Unauthorized:
+      description: Bearer token or webhook signature was missing or rejected.
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+          example:
+            error:
+              code: unauthorized
+              message: unauthorized
+              request_id: req_0123456789abcdef
+    NotFound:
+      description: No stored order uses this id.
+      headers:
+        X-Request-Id:
+          $ref: "#/components/headers/RequestId"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    PayloadTooLarge:
+      description: Body exceeded MAX_BODY_BYTES.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+    UnsupportedMedia:
+      description: Content-Type is not JSON.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorEnvelope"
+  schemas:
+    Health:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          enum: [ok]
+    CreateOrderRequest:
+      type: object
+      additionalProperties: false
+      required: [sku, quantity, customer_ref]
+      properties:
+        sku:
+          type: string
+          pattern: "^[A-Z0-9][A-Z0-9_-]{0,63}$"
+        quantity:
+          type: integer
+          minimum: 1
+          maximum: 100
+        customer_ref:
+          type: string
+          pattern: "^[A-Za-z0-9_-]{1,64}$"
+    Order:
+      type: object
+      additionalProperties: false
+      required: [id, sku, quantity, customer_ref, status, created_at]
+      properties:
+        id:
+          type: string
+          pattern: "^ord_[0-9a-f]{16}$"
+        sku:
+          type: string
+        quantity:
+          type: integer
+        customer_ref:
+          type: string
+        status:
+          type: string
+          enum: [accepted]
+        created_at:
+          type: string
+          format: date-time
+    WebhookEvent:
+      type: object
+      additionalProperties: false
+      required: [id, type, order_id, occurred_at]
+      properties:
+        id:
+          type: string
+          pattern: "^[A-Za-z0-9_-]{1,80}$"
+        type:
+          type: string
+          enum: [order.accepted]
+        order_id:
+          type: string
+          pattern: "^ord_[0-9a-f]{16}$"
+        occurred_at:
+          type: string
+          format: date-time
+    WebhookResult:
+      type: object
+      additionalProperties: false
+      required: [status, duplicate, event_id]
+      properties:
+        status:
+          type: string
+          enum: [accepted, duplicate]
+        duplicate:
+          type: boolean
+        event_id:
+          type: string
+    ErrorEnvelope:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          $ref: "#/components/schemas/ErrorBody"
+    ErrorBody:
+      type: object
+      additionalProperties: false
+      required: [code, message, request_id]
+      properties:
+        code:
+          type: string
+          enum:
+            - bad_request
+            - validation_error
+            - unauthorized
+            - not_found
+            - method_not_allowed
+            - payload_too_large
+            - unsupported_media_type
+        message:
+          type: string
+        request_id:
+          type: string
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/FieldDetail"
+    FieldDetail:
+      type: object
+      additionalProperties: false
+      required: [field, message]
+      properties:
+        field:
+          type: string
+        message:
+          type: string

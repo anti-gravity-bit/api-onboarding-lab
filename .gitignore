@@ -1,0 +1,8 @@
+.env
+/bin/
+/labd
+/coverage.out
+/coverage.html
+/build/
+*.exe
+*.test
