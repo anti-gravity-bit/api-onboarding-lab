@@ -6,7 +6,7 @@ Owners: Grok (contract and review), Codex (Go and CI), AGY (docs and QA). Status
 | --- | --- | --- | --- |
 | T0 | done | Grok | Discovery, plan, acceptance matrix, agent seats |
 | T1 | done | Grok | Freeze routes, schemas, webhook rules, and failure semantics |
-| T2 | next | Codex | Failing behavioral tests for every row in `ACCEPTANCE.md` |
+| T2 | in progress | Codex | Failing behavioral tests for every row in `ACCEPTANCE.md` |
 | T3 | pending | Codex | Implement the server to those tests. In-memory store. Stdlib only |
 | T4 | pending | Codex | Go client, curl scripts, `.env.example`, multi-stage Dockerfile, loopback Compose |
 | T5 | pending | Grok | Re-run tests, race detector, and quickstart. Keep the real transcript |
