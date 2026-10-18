@@ -1,0 +1,16 @@
+.PHONY: test test-race cover vet fmt
+
+test:
+	go test ./...
+
+test-race:
+	go test -race ./...
+
+cover:
+	go test -coverprofile=coverage.out ./...
+
+vet:
+	go vet ./...
+
+fmt:
+	go fmt ./...

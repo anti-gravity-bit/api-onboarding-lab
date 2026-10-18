@@ -1,0 +1,14 @@
+services:
+  labd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      ADDR: ":8080"
+      API_TOKEN: "${API_TOKEN:?API_TOKEN must be set}"
+      WEBHOOK_SECRET: "${WEBHOOK_SECRET:?WEBHOOK_SECRET must be set}"
+    ports:
+      - "127.0.0.1:8080:8080"
+    read_only: true
+    security_opt:
+      - no-new-privileges:true
